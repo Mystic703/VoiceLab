@@ -1,0 +1,37 @@
+# === FRONTEND ===
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/.env
+frontend/.DS_Store
+
+# Logs
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+# === BACKEND ===
+backend/__pycache__/
+backend/.pytest_cache/
+backend/.mypy_cache/
+backend/.DS_Store
+
+# Python virtual environments
+backend/venv/
+backend/env/
+backend/.env
+
+# Compiled files
+*.pyc
+*.pyo
+*.pyd
+
+# === GENERAL ===
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log
+
+# === OUTPUTS ===
+outputs/
