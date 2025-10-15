@@ -1,0 +1,47 @@
+.navbar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-left: 40px ;
+}
+
+.image{
+    margin-right: 35px;
+    cursor: pointer;
+}
+ul{
+    list-style-type: none ;
+}
+
+ul li{
+    display: inline-block;
+    margin: 35px;
+    cursor: pointer;
+}
+
+.navbar-right{
+    margin-right: 35px;
+}
+
+.button {
+  padding: 12px 28px;
+  border-radius: 50px; 
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  color: black;
+  cursor: pointer;
+  
+}
+
+
+
