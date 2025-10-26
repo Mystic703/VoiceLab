@@ -4,6 +4,7 @@ frontend/dist/
 frontend/.vite/
 frontend/.env
 frontend/.DS_Store
+frontend/voice-lab/.env
 
 # Logs
 frontend/npm-debug.log*
