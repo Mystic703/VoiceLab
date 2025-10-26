@@ -1,20 +1,38 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import { Routes, Route, useNavigate } from 'react-router-dom'
-import Login from "./pages/Login/Login"
-import Home from './pages/Home/home'
-import { ShaderGradientCanvas, ShaderGradient } from '@shadergradient/react'
-import * as reactSpring from '@react-spring/three'
-function App() {
-  const [count, setCount] = useState(0)
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home/home';
+import Login from './pages/Login/Login';
+import Navbar from './components/Navbar/Navbar';
+import Profile from './pages/Profile/Profile';
 
-  return (
-     <div>
-      <Home/>
-     </div>
-  )
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+  render() {
+    if (this.state.hasError) {
+      return <div>Something went wrong: {this.state.error?.message}</div>;
+    }
+    return this.props.children; 
+  }
 }
 
-export default App
+function App() {
+  return (
+    <ErrorBoundary>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/profile" element={<Profile />}/>
+        </Routes>
+      </BrowserRouter>
+    </ErrorBoundary>
+  );
+}
+
+export default App;

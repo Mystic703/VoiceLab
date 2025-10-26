@@ -1,75 +1,101 @@
-import React, { useState } from 'react'
-import './TextArea.css'
-import ttsIcon from '../../assets/tts-icon.svg'
-import cloneIcon from '../../assets/voice-clone.svg'
-import downloadIcon from '../../assets/download.png'
+import React, { useState } from 'react';
+import { Volume2, Copy, Download, Play, Loader } from 'lucide-react';
+import './TextArea.css';
+import voices from "../../assets/Voices"
 
-const TextArea = ({ placeholder = "Type something..." }) => {
-  const [text, setText] = useState("")
-  const [mode, setMode] = useState("tts") // 'tts' or 'clone'
-  const [language, setLanguage] = useState("a")
-  const [audioUrl, setAudioUrl] = useState(null)
-  const [loading, setLoading] = useState(false)
+const TextArea = ({ placeholder = "Type or paste your text here..." }) => {
+  const [text, setText] = useState("");
+  const [mode, setMode] = useState("tts");
+  const [language, setLanguage] = useState("a");
+  const [voice, setVoice] = useState("");
+  const [audioUrl, setAudioUrl] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [charCount, setCharCount] = useState(0);
 
-  const handleChange = (e) => setText(e.target.value)
+  const maxChars = 5000;
+
+  
+
+  const handleChange = (e) => {
+    const newText = e.target.value;
+    if (newText.length <= maxChars) {
+      setText(newText);
+      setCharCount(newText.length);
+    }
+  };
 
   const handleGenerate = async () => {
-    if (!text.trim()) return alert("Please enter some text.")
+    if (!text.trim()) return alert("Please enter some text.");
+    if (!voice) return alert("Please select a voice.");
 
-    setLoading(true)
+    setLoading(true);
     try {
       const res = await fetch("http://127.0.0.1:8000/tts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text, voice: mode === "tts" ? "af_heart" : "clone", language })
-      })
-      const data = await res.json()
-      if (data.status === "success") setAudioUrl(data.audio_url)
-      else alert(data.message || "Error generating audio")
+        body: JSON.stringify({ text, voice, language })
+      });
+      const data = await res.json();
+      if (data.status === "success") setAudioUrl(data.audio_url);
+      else alert(data.message || "Error generating audio");
     } catch (err) {
-      console.error(err)
-      alert("Error calling TTS API")
+      console.error(err);
+      alert("Error calling TTS API");
     }
-    setLoading(false)
-  }
+    setLoading(false);
+  };
+
+  const filteredVoices = voices.filter(v => v.language === language);
 
   return (
     <div className="text-area-container">
-      {/* Choice Buttons */}
-      <div className="choice-buttons">
-        <div
-          className={`btn ${mode === "tts" ? "active" : ""}`}
+      {/* Mode Toggle */}
+      <div className="mode-toggle">
+        <button
+          className={`mode-btn ${mode === "tts" ? "active" : ""}`}
           onClick={() => setMode("tts")}
         >
-          <img src={ttsIcon} alt="TTS" />
-          <p>TEXT TO SPEECH</p>
-        </div>
-        <div
-          className={`btn ${mode === "clone" ? "active" : ""}`}
+          <Volume2 size={20} />
+          <span>Text to Speech</span>
+        </button>
+        <button
+          className={`mode-btn ${mode === "clone" ? "active" : ""}`}
           onClick={() => setMode("clone")}
         >
-          <img src={cloneIcon} alt="Voice Clone" />
-          <p>VOICE REPLICA</p>
-        </div>
+          <Copy size={20} />
+          <span>Voice Replica</span>
+        </button>
       </div>
 
-      {/* Text Area */}
-      <div className="area">
+      {/* Main Input Area */}
+      <div className="input-wrapper">
         <textarea
           value={text}
           onChange={handleChange}
           placeholder={placeholder}
-          rows={5}
           className="textarea"
         />
+        
+        {/* Character Counter */}
+        <div className="char-counter">
+          <span className={charCount > maxChars * 0.9 ? "warning" : ""}>
+            {charCount} / {maxChars}
+          </span>
+        </div>
+      </div>
 
-        {/* Buttons below textarea */}
-        <div className="btn-below">
-          {/* Language Selector */}
+      {/* Controls Grid */}
+      <div className="controls-grid">
+        {/* Language Select */}
+        <div className="select-wrapper">
+          <label className="label">Language</label>
           <select
-            className="btn"
+            className="select"
             value={language}
-            onChange={(e) => setLanguage(e.target.value)}
+            onChange={(e) => {
+              setLanguage(e.target.value);
+              setVoice("");
+            }}
           >
             <option value="a">English (US)</option>
             <option value="b">English (UK)</option>
@@ -81,29 +107,63 @@ const TextArea = ({ placeholder = "Type something..." }) => {
             <option value="p">Portuguese</option>
             <option value="z">Mandarin</option>
           </select>
+        </div>
 
-          <div className="btn-right">
-            {/* Play Button */}
-            <button className="btn" onClick={handleGenerate} disabled={loading}>
-              {loading ? "Generating..." : "PLAY"}
-            </button>
+        {/* Voice Select */}
+        <div className="select-wrapper">
+          <label className="label">Voice</label>
+          <select
+            className="select"
+            value={voice}
+            onChange={(e) => setVoice(e.target.value)}
+          >
+            <option value="">Select a voice</option>
+            {filteredVoices.map(v => (
+              <option key={v.name} value={v.name}>
+                {v.name} ({v.gender})
+              </option>
+            ))}
+          </select>
+        </div>
 
-            {/* Download Button */}
-            {audioUrl && (
-              <a href={audioUrl} download className="btn">
-                <img src={downloadIcon} alt="Download" />
-              </a>
+        {/* Action Buttons */}
+        <div className="action-buttons">
+          <button
+            className={`generate-btn ${loading ? "loading" : ""}`}
+            onClick={handleGenerate}
+            disabled={loading}
+          >
+            {loading ? (
+              <>
+                <Loader size={20} className="spinner" />
+                <span>Generating...</span>
+              </>
+            ) : (
+              <>
+                <Play size={20} />
+                <span>Generate</span>
+              </>
             )}
-          </div>
+          </button>
+          
+          {audioUrl && (
+            <a href={audioUrl} download className="download-btn">
+              <Download size={20} />
+            </a>
+          )}
         </div>
       </div>
 
-      {/* Audio preview */}
+      {/* Audio Preview */}
       {audioUrl && (
-        <audio src={audioUrl} controls autoPlay style={{ marginTop: "1rem" }} />
+        <div className="audio-wrapper">
+          <audio controls className="audio">
+            <source src={audioUrl} type="audio/mpeg" />
+          </audio>
+        </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default TextArea
+export default TextArea;

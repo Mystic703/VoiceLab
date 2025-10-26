@@ -1,0 +1,37 @@
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.profile-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.profile-menu {
+  position: absolute;
+  top: 60px; /* adjust based on navbar height */
+  right: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  padding: 0.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  z-index: 10;
+}
+
+.profile-menu p {
+  margin: 0;
+  cursor: pointer;
+  font-weight: 500;
+  color: black;
+}
+
+.profile-menu p:hover {
+  color: #6bf5ff;
+}

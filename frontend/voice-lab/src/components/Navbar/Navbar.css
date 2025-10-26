@@ -43,5 +43,21 @@ ul li{
   
 }
 
+.navbar ul li a {
+  color: black;
+  text-decoration: none;     
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
 
+.navbar ul li a:hover {
+  color: rgba(0,0,0,0.70);            
+}
+
+
+@media screen and (max-width: 768px) {
+  ul {
+    display: none; /* hide the menu completely */
+  }
+}
 

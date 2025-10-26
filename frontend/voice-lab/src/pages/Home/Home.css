@@ -107,14 +107,16 @@
 }
 
 .how-it-works h2 {
-  font-size: 2.6rem;
+  font-size: clamp(1.8rem, 5vw, 2.6rem); /* scales between 1.8rem and 2.6rem */
   font-weight: 700;
   background: black;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  margin-bottom: 70px;
+  margin-bottom: 50px; /* reduce spacing a bit for smaller screens */
   letter-spacing: 0.5px;
+  text-align: center;
 }
+
 
 .steps {
   display: flex;
@@ -164,3 +166,6 @@
   color: black;
 }
 
+#features{
+  margin-top: 20px;
+}

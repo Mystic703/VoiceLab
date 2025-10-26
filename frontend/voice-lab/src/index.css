@@ -12,3 +12,7 @@ body{
   color: black;
   font-family:'poppins' ;
 }
+
+html {
+  scroll-behavior: smooth;
+}
